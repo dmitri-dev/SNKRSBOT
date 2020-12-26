@@ -1,3 +1,5 @@
+package com.example.snkrsbot_test;
+
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -6,18 +8,16 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class Checkout extends PageObject {
-    private static final String CVV = "878";
+    private static final String CVV = "999";
 
-    private static final Navigate Navigate = Utils.Navigate;
+    @FindBy(css = "button.ncss-btn-secondary-dark.mb4-sm.mb4-md.ml2-md.mr4-md")
+    public WebElement newCardButton;
 
-//    @FindBy(xpath = "//input[@data-shortname='cvv']")
-//    private WebElement cvv;
+    @FindBy(xpath = "//button[contains(text(), 'Continue')]")
+    private WebElement saveAndContinue;
 
-    @FindBy(xpath = "//button[contains(text(), 'Delete')]")
-    public WebElement deleteButton;
-
-//    @FindBy(xpath = "//button[contains(text(), 'Order')]")
-//    public WebElement placeOrder;
+    @FindBy(xpath = "//button[contains(text(), 'Order')]")
+    public WebElement orderButton;
 
     @FindBy(xpath = "//div[contains(text(), 'Pending')]")
     private WebElement confirmation;
@@ -26,25 +26,33 @@ public class Checkout extends PageObject {
         super(driver);
     }
 
-//    public void enterCVV() {
-//        Navigate.sendKeys(new String[] {"TAB", "TAB", "ENTER", "TAB"});
-//        Utils.actions.sendKeys(CVV).build().perform();
-//    }
-
     public void enterCVV() {
-        Utils.wait.until(
-                ExpectedConditions.elementToBeClickable(
-                        deleteButton
-                )
-        );
-        Utils.actions.moveToElement(deleteButton).build().perform();
         Utils.actions.sendKeys(Keys.TAB).build().perform();
+        Utils.wait.until(
+                (ExpectedCondition<Boolean>)
+                        driver -> this.newCardButton.isDisplayed()
+        );
+        Utils.actions.moveToElement(this.newCardButton).build().perform();
+        Utils.actions.keyDown(Keys.SHIFT).sendKeys(Keys.TAB).build().perform();
         Utils.actions.sendKeys(CVV).build().perform();
     }
 
+    public void saveAndContinue() {
+        Utils.wait.until(
+                ExpectedConditions.elementToBeClickable(
+                        this.saveAndContinue
+                )
+        );
+        this.saveAndContinue.click();
+    }
+
     public void placeOrder() {
-        Utils.actions.sendKeys(Keys.TAB).build().perform();
-        Utils.actions.sendKeys(Keys.ENTER).build().perform();
+        Utils.wait.until(
+                ExpectedConditions.elementToBeClickable(
+                        this.orderButton
+                )
+        );
+        this.orderButton.click();
     }
 
     public void verifyCheckoutSuccess() {

@@ -1,3 +1,5 @@
+package com.example.snkrsbot_test;
+
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -5,8 +7,8 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
 public class Login extends PageObject {
-    private static final String EMAIL = "nuzhnyd@yahoo.com";
-    private static final String PASSWORD = "IAmNotARobot1!";
+    private static final String EMAIL = "test";
+    private static final String PASSWORD = "test";
 
     private static final Navigate Navigate = Utils.Navigate;
 

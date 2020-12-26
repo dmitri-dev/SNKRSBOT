@@ -1,3 +1,5 @@
+package com.example.snkrsbot_test;
+
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
@@ -9,23 +11,26 @@ public class Runner {
 
     @BeforeSuite
     public static void main(String[] args) {
-        System.setProperty("webdriver.chrome.driver", Utils.CHROME_DRIVER_LOCATION);
     }
 
-    @Test(testName = "SNKRS")
-    public static void run() throws InterruptedException {
+    @Test(testName = "SNKRSBOT")
+    public static void runTest() throws InterruptedException {
         driver.get(Utils.BASE_URL);
         driver.manage().window().maximize();
 
-//        login();
+        try {
 
-        select();
+            login();
 
-        checkout();
+            select();
 
-//        cart();
+            checkout();
 
-        Thread.sleep(10000);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        Thread.sleep(60000);
     }
 
     public static void login() throws InterruptedException {
@@ -34,7 +39,7 @@ public class Runner {
         login.verifyLoginSuccess();
     }
 
-    public static void select() throws InterruptedException {
+    public static void select() {
         Navigate.toUpcoming();
         Selector selector = new Selector(driver);
         selector.getItem();
@@ -42,24 +47,18 @@ public class Runner {
         selector.awaitSizes();
         selector.setSize();
         selector.buy();
-//        selector.verifySelectionSuccess();
     }
 
-    public static void checkout() {
+    public static void checkout() throws InterruptedException {
         Checkout checkout = new Checkout(driver);
         checkout.enterCVV();
+        checkout.saveAndContinue();
         checkout.placeOrder();
         checkout.verifyCheckoutSuccess();
     }
 
-    public static void cart() {
-        Cart cart = new Cart(driver);
-        Navigate.toCart();
-        cart.empty();
-    }
-
     @AfterSuite
-    public static void cleanUp(){
+    public static void cleanUp() {
         driver.manage().deleteAllCookies();
         driver.close();
     }
