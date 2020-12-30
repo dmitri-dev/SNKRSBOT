@@ -1,64 +1,56 @@
 package com.example.snkrsbot_test;
 
+import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-public class Checkout extends PageObject {
-    private static final String CVV = "999";
+import static com.codeborne.selenide.Selenide.*;
 
-    @FindBy(css = "button.ncss-btn-secondary-dark.mb4-sm.mb4-md.ml2-md.mr4-md")
-    public WebElement newCardButton;
+public class Checkout {
+    private static final String CVV = "330";
 
-    @FindBy(xpath = "//button[contains(text(), 'Continue')]")
-    private WebElement saveAndContinue;
+    private static final SelenideElement newCardButton = $("button.ncss-btn-secondary-dark.mb4-sm.mb4-md.ml2-md.mr4-md");
 
-    @FindBy(xpath = "//button[contains(text(), 'Order')]")
-    public WebElement orderButton;
+    private static final SelenideElement saveAndContinue = $x("//button[contains(text(), 'Continue')]");
 
-    @FindBy(xpath = "//div[contains(text(), 'Pending')]")
-    private WebElement confirmation;
+    private static final SelenideElement orderButton = $x("//button[contains(text(), 'Order')]");
 
-    public Checkout(WebDriver driver) {
-        super(driver);
-    }
+    private static final SelenideElement confirmation = $x("//div[contains(text(), 'Pending')]");
 
-    public void enterCVV() {
-        Utils.actions.sendKeys(Keys.TAB).build().perform();
-        Utils.wait.until(
+    public static void enterCVV() {
+        actions().sendKeys(Keys.TAB).build().perform();
+        Wait().until(
                 (ExpectedCondition<Boolean>)
-                        driver -> this.newCardButton.isDisplayed()
+                        driver -> newCardButton.isDisplayed()
         );
-        Utils.actions.moveToElement(this.newCardButton).build().perform();
-        Utils.actions.keyDown(Keys.SHIFT).sendKeys(Keys.TAB).build().perform();
-        Utils.actions.sendKeys(CVV).build().perform();
+        actions().moveToElement(newCardButton).build().perform();
+        actions().keyDown(Keys.SHIFT).sendKeys(Keys.TAB).build().perform();
+        actions().sendKeys(CVV).build().perform();
     }
 
-    public void saveAndContinue() {
-        Utils.wait.until(
+    public static void saveAndContinue() {
+        Wait().until(
                 ExpectedConditions.elementToBeClickable(
-                        this.saveAndContinue
+                        saveAndContinue
                 )
         );
-        this.saveAndContinue.click();
+        saveAndContinue.click();
     }
 
-    public void placeOrder() {
-        Utils.wait.until(
+    public static void placeOrder() {
+        Wait().until(
                 ExpectedConditions.elementToBeClickable(
-                        this.orderButton
+                        orderButton
                 )
         );
-        this.orderButton.click();
+        orderButton.click();
     }
 
-    public void verifyCheckoutSuccess() {
-        Utils.wait.until(
+    public static void verifyCheckoutSuccess() {
+        Wait().until(
                 (ExpectedCondition<Boolean>)
-                        driver -> this.confirmation.isDisplayed()
+                        driver -> confirmation.isDisplayed()
         );
         System.out.println("Checkout Complete");
     }

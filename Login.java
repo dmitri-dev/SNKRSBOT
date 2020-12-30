@@ -1,39 +1,32 @@
 package com.example.snkrsbot_test;
 
+import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
-public class Login extends PageObject {
-    private static final String EMAIL = "test";
-    private static final String PASSWORD = "test";
+import static com.codeborne.selenide.Selenide.*;
 
-    private static final Navigate Navigate = Utils.Navigate;
+public class Login {
+    private static final String EMAIL = "nuzhnyd@yahoo.com";
+    private static final String PASSWORD = "IAmNotARobot1!";
 
-    @FindBy(css = "span.test-name.text-color-secondary.ml2-sm.va-sm-m.d-sm-h.d-md-ib.fs-block")
-    public WebElement username;
+    private static final SelenideElement username = $("span.test-name.text-color-secondary.ml2-sm.va-sm-m.d-sm-h.d-md-ib.fs-block");
 
-    public Login(WebDriver driver) {
-        super(driver);
-    }
-
-    public void login() throws InterruptedException {
+    public static void login() {
         Navigate.sendKeys(new String[] {"TAB", "TAB", "ENTER", "TAB"});
-        Utils.actions.sendKeys(EMAIL).build().perform();
-        Thread.sleep(1000);
-        Utils.actions.sendKeys(Keys.TAB).build().perform();
-        Thread.sleep(1000);
-        Utils.actions.sendKeys(PASSWORD).build().perform();
-        Thread.sleep(1000);
-        Utils.actions.sendKeys(Keys.ENTER).build().perform();
+        actions().sendKeys(EMAIL).build().perform();
+        sleep(1000);
+        actions().sendKeys(Keys.TAB).build().perform();
+        sleep(1000);
+        actions().sendKeys(PASSWORD).build().perform();
+        sleep(1000);
+        actions().sendKeys(Keys.ENTER).build().perform();
     }
 
-    public void verifyLoginSuccess() {
-        Utils.wait.until(
+    public static void verifyLoginSuccess() {
+        Wait().until(
                 (ExpectedCondition<Boolean>)
-                        driver -> this.username.isDisplayed()
+                        driver -> username.isDisplayed()
         );
         System.out.println("Login Complete\n");
     }

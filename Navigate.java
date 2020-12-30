@@ -1,31 +1,26 @@
 package com.example.snkrsbot_test;
 
+import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-public class Navigate extends PageObject {
-    @FindBy(xpath = "//div[contains(text(), 'Upcoming')]")
-    public WebElement upcoming;
+import static com.codeborne.selenide.Selenide.*;
 
-    public Navigate(WebDriver driver) {
-        super(driver);
-    }
+public class Navigate {
+    private static final SelenideElement upcoming = $x("//div[contains(text(), 'Upcoming')]");
 
-    public void sendKeys(String[] keys) {
+    public static void sendKeys(String[] keys) {
         for (String key : keys) {
-            Utils.actions.sendKeys(Keys.valueOf(key)).build().perform();
+            actions().sendKeys(Keys.valueOf(key)).build().perform();
         }
     }
 
-    public void toUpcoming() {
-        Utils.wait.until(
+    public static void toUpcoming() {
+        Wait().until(
                 ExpectedConditions.elementToBeClickable(
-                        this.upcoming
+                        upcoming
                 )
         );
-        this.upcoming.click();
+        upcoming.click();
     }
 }

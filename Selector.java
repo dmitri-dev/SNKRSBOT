@@ -1,56 +1,51 @@
 package com.example.snkrsbot_test;
 
-import  org.openqa.selenium.*;
-import org.openqa.selenium.support.FindAll;
-import org.openqa.selenium.support.FindBy;
+import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideElement;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+
+import static com.codeborne.selenide.Selenide.*;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Date;
 
-public class Selector extends PageObject {
-    private static final String ITEM_NAME = "Air Force";
+public class Selector {
+    private static final String ITEM_NAME = "Kyrie 7";
 
-    private static final String releaseDate = "YYYY-MM-DD HH:MM:SS";
+    private static final String releaseDate = "2020-12-30 10:00:00";
     private static final String[] sizeChoices = {"M 10.5", "M 11", "M 12"};
     private static final String[] mensSizeChoices = {"10.5", "11", "12"};
 
-    @FindBy(xpath = "//img[contains(@alt, '" + ITEM_NAME + "')]")
-    public WebElement item;
+    private static final SelenideElement item = $x("//img[contains(@alt, '" + ITEM_NAME + "')]");
 
-    @FindAll({@FindBy(xpath = "//li[@data-qa='size-available']")})
-    public List<WebElement> availableSizes;
+    private static final ElementsCollection availableSizes = $$x("//li[@data-qa='size-available']");
 
-    @FindBy(xpath = "//button[contains(text(), 'Buy')]")
-    public WebElement buy;
+    private static final SelenideElement buy = $x("//button[contains(text(), 'Buy')]");
 
-    public Selector(WebDriver driver) {
-        super(driver);
-    }
-
-    public void getItem() {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
+    public static void getItem() {
         int i = 0;
         while (i < 5) {
             try {
-                Utils.wait.until(
+                Wait().until(
                         ExpectedConditions.elementToBeClickable(
-                                this.item
+                                item
                         )
                 );
-                this.item.click();
+                item.click();
                 break;
             } catch (Exception e) {
-                js.executeScript("window.scrollBy(0, 1000)");
+                executeJavaScript("window.scrollBy(0, 1000)");
                 i++;
             }
         }
     }
 
-    public void awaitRelease() {
+    public static void awaitRelease() {
         String dateTime = LocalDateTime.now().toString();
         int t = dateTime.indexOf("T");
         String date = dateTime.substring(0, t);
@@ -73,54 +68,55 @@ public class Selector extends PageObject {
         }
     }
 
-    public void awaitSizes() {
-        driver.navigate().refresh();
-        WebDriverWait wait = new WebDriverWait(driver, 60);
-        wait.until(
+    public static void awaitSizes() {
+        Configuration.timeout = 60000;
+        refresh();
+        Wait().until(
                 (ExpectedCondition<Boolean>)
-                        driver -> this.availableSizes.size() > 0
+                        driver -> availableSizes.size() > 0
         );
+        Configuration.timeout = 10000;
     }
 
-    public void setSize() {
-        if (this.availableSizes.get(0).getText().contains("M")) {
+    public static void setSize() {
+        if (availableSizes.get(0).getText().contains("M")) {
             getSize(sizeChoices);
         } else {
             getSize(mensSizeChoices);
         }
     }
 
-    public void getSize(String[] choices) {
+    public static void getSize(String[] choices) {
         for (String choice : choices) {
             for (WebElement size : availableSizes) {
                 System.out.println(size.getText());
                 if (size.getText().contains(choice)) {
                     System.out.println(size.getText());
-                    Utils.actions.moveToElement(size);
-                    Utils.actions.sendKeys(Keys.TAB).build().perform();
-                    Utils.actions.sendKeys(Keys.ENTER).build().perform();
+                    actions().moveToElement(size);
+                    actions().sendKeys(Keys.TAB).build().perform();
+                    actions().sendKeys(Keys.ENTER).build().perform();
                     return;
                 }
             }
         }
     }
 
-    public void buy() {
+    public static void buy() {
         try {
-            Utils.wait.until(
+            Wait().until(
                     (ExpectedCondition<Boolean>)
-                            driver -> this.buy.isDisplayed()
-                                    && this.buy.isEnabled()
+                            driver -> buy.isDisplayed()
+                                    && buy.isEnabled()
             );
-            Utils.wait.until(
+            Wait().until(
                     ExpectedConditions.elementToBeClickable(
-                            this.buy
+                            buy
                     )
             );
         } catch (Exception e) {
             e.printStackTrace();
         }
-        this.buy.click();
+        buy.click();
         System.out.println("Selection Complete\n");
     }
 }

@@ -1,22 +1,25 @@
 package com.example.snkrsbot_test;
 
-import org.openqa.selenium.WebDriver;
+import com.codeborne.selenide.Configuration;
+
+import org.testng.annotations.Test;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.Test;
+
+import static com.codeborne.selenide.Selenide.*;
+import static com.example.snkrsbot_test.Utils.*;
 
 public class Runner {
-    private static final WebDriver driver = Utils.driver;
-    private static final Navigate Navigate = Utils.Navigate;
-
     @BeforeSuite
     public static void main(String[] args) {
+        Configuration.timeout = 10000;
+        Configuration.startMaximized = true;
+        Ninja.setOptions();
     }
 
     @Test(testName = "SNKRSBOT")
-    public static void runTest() throws InterruptedException {
-        driver.get(Utils.BASE_URL);
-        driver.manage().window().maximize();
+    public static void runTest() {
+        open(BASE_URL);
 
         try {
 
@@ -30,36 +33,34 @@ public class Runner {
             System.out.println(e.getMessage());
         }
 
-        Thread.sleep(60000);
+        sleep(60000);
     }
 
-    public static void login() throws InterruptedException {
-        Login login = new Login(driver);
-        login.login();
-        login.verifyLoginSuccess();
+    public static void login() {
+        Login.login();
+        Login.verifyLoginSuccess();
     }
 
     public static void select() {
         Navigate.toUpcoming();
-        Selector selector = new Selector(driver);
-        selector.getItem();
-        selector.awaitRelease();
-        selector.awaitSizes();
-        selector.setSize();
-        selector.buy();
+        Selector.getItem();
+        Selector.awaitRelease();
+        Selector.awaitSizes();
+        Selector.setSize();
+        Selector.buy();
     }
 
-    public static void checkout() throws InterruptedException {
-        Checkout checkout = new Checkout(driver);
-        checkout.enterCVV();
-        checkout.saveAndContinue();
-        checkout.placeOrder();
-        checkout.verifyCheckoutSuccess();
+    public static void checkout() {
+        Checkout.enterCVV();
+        Checkout.saveAndContinue();
+        Checkout.placeOrder();
+        Checkout.verifyCheckoutSuccess();
     }
 
     @AfterSuite
     public static void cleanUp() {
-        driver.manage().deleteAllCookies();
-        driver.close();
+        clearBrowserCookies();
+        clearBrowserLocalStorage();
+        closeWebDriver();
     }
 }
