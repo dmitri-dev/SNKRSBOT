@@ -7,8 +7,8 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import static com.codeborne.selenide.Selenide.*;
 
 public class Login {
-    private static final String EMAIL = "nuzhnyd@yahoo.com";
-    private static final String PASSWORD = "IAmNotARobot1!";
+    private static final String EMAIL = "test";
+    private static final String PASSWORD = "test";
 
     private static final SelenideElement username = $("span.test-name.text-color-secondary.ml2-sm.va-sm-m.d-sm-h.d-md-ib.fs-block");
 
