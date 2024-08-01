@@ -1,1 +1,1 @@
-# SNKRSBOT
+# Unfortunately this bot never worked, maybe it was too slow, was being blocked by captchas/ip ban, was beaten by other bots, or wouldve only been viable as an Appium application. It is not likely to be currently viable. May have some useful functions for other selenium apps.
